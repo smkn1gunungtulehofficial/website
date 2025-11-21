@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Data Alumni</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- PapaParse (Untuk membaca Google Sheet) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563eb',    // Royal Blue
+                        secondary: '#1e40af',  // Darker Blue
+                        accent: '#f59e0b',     // Amber
+                        bgLight: '#f3f4f6',    // Light Gray
+                        card: '#ffffff'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar for Table */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-bgLight text-slate-800 font-sans antialiased">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-blue-100 p-2 rounded-lg text-primary">
+                        <i class="ph ph-student text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900">Portal Alumni</h1>
+                        <p class="text-xs text-slate-500">Database & Statistik Lulusan</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="text-sm font-medium" id="current-date">Jumat, 21 Nov 2025</p>
+                        <p class="text-xs text-green-600 flex items-center justify-end gap-1">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Online
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Loading State -->
+        <div id="loading-state" class="text-center py-20">
+            <div class="loader mb-4"></div>
+            <p class="text-slate-500">Mengambil data dari Spreadsheet...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="hidden bg-red-50 border border-red-200 rounded-xl p-6 text-center mb-8">
+            <i class="ph ph-warning-circle text-4xl text-red-500 mb-2"></i>
+            <h3 class="text-lg font-semibold text-red-700">Gagal Memuat Data</h3>
+            <p class="text-red-600 text-sm mb-4">Pastikan link Google Sheet bersifat Publik ("Anyone with the link" sebagai Viewer).</p>
+            <button onclick="loadMockData()" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg text-sm font-medium transition">
+                Gunakan Data Contoh (Demo)
+            </button>
+        </div>
+
+        <!-- Dashboard Content (Hidden by default) -->
+        <div id="dashboard-content" class="hidden space-y-8">
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium mb-1">Total Alumni</p>
+                        <h3 class="text-3xl font-bold text-slate-800" id="stat-total">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
+                        <i class="ph ph-users-three text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium mb-1">Jurusan Terbanyak</p>
+                        <h3 class="text-xl font-bold text-slate-800 truncate max-w-[150px]" id="stat-top-major">-</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600">
+                        <i class="ph ph-certificate text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium mb-1">Angkatan Terbaru</p>
+                        <h3 class="text-3xl font-bold text-slate-800" id="stat-latest-year">-</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center text-amber-600">
+                        <i class="ph ph-calendar-check text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Pie Chart -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="ph ph-chart-pie-slice text-indigo-500"></i> Sebaran Jurusan
+                        </h3>
+                        <button class="text-gray-400 hover:text-gray-600"><i class="ph ph-dots-three text-xl"></i></button>
+                    </div>
+                    <div class="relative h-64 w-full flex justify-center">
+                        <canvas id="jurusanChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bar Chart -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="ph ph-chart-bar text-blue-500"></i> Lulusan per Tahun
+                        </h3>
+                        <button class="text-gray-400 hover:text-gray-600"><i class="ph ph-dots-three text-xl"></i></button>
+                    </div>
+                    <div class="relative h-64 w-full">
+                        <canvas id="tahunChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">Data Lengkap Alumni</h3>
+                        <p class="text-sm text-gray-500">Cari dan filter data alumni terdaftar</p>
+                    </div>
+                    
+                    <!-- Search Bar -->
+                    <div class="relative w-full md:w-72">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="ph ph-magnifying-glass text-gray-400"></i>
+                        </div>
+                        <input type="text" id="searchInput" 
+                            class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg leading-5 bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out sm:text-sm" 
+                            placeholder="Cari nama, jurusan, atau tahun...">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jurusan</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tahun Lulus</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="tableBody">
+                            <!-- Rows will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                    <span class="text-sm text-gray-500" id="showingText">Menampilkan 0 data</span>
+                    <div class="flex gap-2">
+                        <!-- Simple Pagination placeholder -->
+                        <button class="p-1 rounded hover:bg-gray-200 disabled:opacity-50" disabled><i class="ph ph-caret-left"></i></button>
+                        <button class="p-1 rounded hover:bg-gray-200 disabled:opacity-50" disabled><i class="ph ph-caret-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">© 2025 Sistem Informasi Alumni. Dibuat dengan sepenuh hati.</p>
+        </div>
+    </footer>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+        // --- Configuration ---
+        // Mengubah link edit menjadi link export CSV
+        const SPREADSHEET_ID = "1LpkSgJz_8WbBURU99P1Egyl7YdgPavMlLbMFxM0rtMw";
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+
+        // Global variables
+        let allAlumniData = [];
+        let jurusanChartInstance = null;
+        let tahunChartInstance = null;
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+            fetchData();
+        });
+
+        // --- 1. Fetch Data ---
+        function fetchData() {
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true, // Assumes first row is header
+                complete: function(results) {
+                    const data = results.data;
+                    // Filter empty rows just in case
+                    const validData = data.filter(row => Object.values(row).some(val => val !== ""));
+                    
+                    if (validData.length === 0) {
+                        showError();
+                        return;
+                    }
+
+                    console.log("Data fetched:", validData);
+                    processData(validData);
+                },
+                error: function(err) {
+                    console.error("Error fetching CSV:", err);
+                    showError();
+                }
+            });
+        }
+
+        // --- 2. Process Data ---
+        function processData(data) {
+            // Normalisasi Key Object (karena header di sheet bisa bervariasi case-nya)
+            // Kita akan mencoba menebak nama kolom berdasarkan kata kunci
+            
+            allAlumniData = data.map((row, index) => {
+                // Cari key yang cocok
+                const keys = Object.keys(row);
+                const namaKey = keys.find(k => k.toLowerCase().includes('nama'));
+                const jurusanKey = keys.find(k => k.toLowerCase().includes('jurusan') || k.toLowerCase().includes('prodi'));
+                const tahunKey = keys.find(k => k.toLowerCase().includes('tahun') || k.toLowerCase().includes('lulus') || k.toLowerCase().includes('angkatan'));
+                
+                return {
+                    id: index + 1,
+                    nama: row[namaKey] || "Tanpa Nama",
+                    jurusan: row[jurusanKey] || "Umum",
+                    tahun: row[tahunKey] || "N/A",
+                    // Random status for demo purposes if not in sheet
+                    status: Math.random() > 0.3 ? "Bekerja" : (Math.random() > 0.5 ? "Wirausaha" : "Studi Lanjut")
+                };
+            });
+
+            updateStats();
+            initCharts();
+            renderTable(allAlumniData);
+            
+            // Show dashboard, hide loading
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.remove('hidden');
+        }
+
+        // --- 3. Charts Logic ---
+        function initCharts() {
+            // A. Process Pie Chart Data (Jurusan)
+            const jurusanCounts = {};
+            allAlumniData.forEach(item => {
+                const j = item.jurusan;
+                jurusanCounts[j] = (jurusanCounts[j] || 0) + 1;
+            });
+
+            const jurusanLabels = Object.keys(jurusanCounts);
+            const jurusanValues = Object.values(jurusanCounts);
+            const pieColors = ['#3b82f6', '#f59e0b', '#10b981', '#6366f1', '#ec4899', '#8b5cf6', '#14b8a6'];
+
+            // B. Process Bar Chart Data (Tahun Lulus)
+            const tahunCounts = {};
+            allAlumniData.forEach(item => {
+                const t = item.tahun;
+                if(t && t !== "N/A") tahunCounts[t] = (tahunCounts[t] || 0) + 1;
+            });
+            // Sort years
+            const sortedYears = Object.keys(tahunCounts).sort();
+            const yearValues = sortedYears.map(y => tahunCounts[y]);
+
+            // C. Render Pie Chart
+            const ctxPie = document.getElementById('jurusanChart').getContext('2d');
+            jurusanChartInstance = new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: jurusanLabels,
+                    datasets: [{
+                        data: jurusanValues,
+                        backgroundColor: pieColors,
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { font: { family: 'Inter' }, usePointStyle: true }
+                        }
+                    },
+                    layout: { padding: 20 }
+                }
+            });
+
+            // D. Render Bar Chart
+            const ctxBar = document.getElementById('tahunChart').getContext('2d');
+            tahunChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: sortedYears,
+                    datasets: [{
+                        label: 'Jumlah Alumni',
+                        data: yearValues,
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 6,
+                        barThickness: 30
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // --- 4. Table & UI Logic ---
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Data tidak ditemukan</td></tr>`;
+                document.getElementById('showingText').innerText = `Menampilkan 0 data`;
+                return;
+            }
+
+            // Batasi hanya 4 data yang ditampilkan
+            const limitedData = data.slice(0, 4);
+
+            limitedData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition-colors";
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${row.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold text-xs mr-3">
+                                ${row.nama.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="text-sm font-medium text-gray-900">${row.nama}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${row.jurusan}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${row.tahun}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('showingText').innerText = `Menampilkan ${limitedData.length} dari ${data.length} alumni`;
+        }
+
+        function updateStats() {
+            // Total
+            document.getElementById('stat-total').innerText = allAlumniData.length;
+            
+            // Top Major
+            const counts = {};
+            allAlumniData.forEach(i => counts[i.jurusan] = (counts[i.jurusan] || 0) + 1);
+            const topMajor = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b, "-");
+            document.getElementById('stat-top-major').innerText = topMajor;
+
+            // Latest Year
+            const years = allAlumniData.map(i => i.tahun).filter(y => !isNaN(y));
+            const maxYear = years.length ? Math.max(...years) : "-";
+            document.getElementById('stat-latest-year').innerText = maxYear;
+        }
+
+        // --- 5. Search Functionality ---
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filtered = allAlumniData.filter(item => 
+                item.nama.toLowerCase().includes(keyword) ||
+                item.jurusan.toLowerCase().includes(keyword) ||
+                String(item.tahun).includes(keyword)
+            );
+            renderTable(filtered);
+        });
+
+        // --- 6. Utilities / Error Handling ---
+        function showError() {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('error-state').classList.remove('hidden');
+        }
+
+        function loadMockData() {
+            const mockData = [
+                { nama: "Andi Pratama", jurusan: "Teknik Informatika", tahun: "2023" },
+                { nama: "Siti Aminah", jurusan: "Akuntansi", tahun: "2022" },
+                { nama: "Budi Santoso", jurusan: "Teknik Sipil", tahun: "2021" },
+                { nama: "Dewi Lestari", jurusan: "Manajemen", tahun: "2023" },
+                { nama: "Eko Wijaya", jurusan: "Teknik Informatika", tahun: "2022" },
+                { nama: "Fani Rahmawati", jurusan: "Akuntansi", tahun: "2020" },
+                { nama: "Gilang Saputra", jurusan: "Desain Komunikasi Visual", tahun: "2023" },
+                { nama: "Hani Indah", jurusan: "Manajemen", tahun: "2021" },
+                { nama: "Indra Lesmana", jurusan: "Teknik Sipil", tahun: "2020" },
+                { nama: "Joko Anwar", jurusan: "Teknik Informatika", tahun: "2021" },
+                { nama: "Kartika Putri", jurusan: "Sastra Inggris", tahun: "2022" },
+                { nama: "Lukman Hakim", jurusan: "Hukum", tahun: "2023" }
+            ];
+            document.getElementById('error-state').classList.add('hidden');
+            processData(mockData);
+        }
+
+    </script>
+</body>
+</html>
