@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visi & Misi SMKN 1 Gunung Tuleh</title>
+    <style>
+        /* === RESET & BASE STYLES === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* === VISI SECTION (EDITED: POLOS, BESAR, DONGKER) === */
+        .visi-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 60px;
+            margin-top: 20px; /* Tambahan margin atas karena header dihapus */
+            animation: zoomIn 0.8s ease-out;
+        }
+
+        .visi-card {
+            /* MENGHAPUS FRAME: Background transparan, tanpa border, tanpa shadow */
+            background: transparent;
+            padding: 20px;
+            border: none; 
+            box-shadow: none;
+            text-align: center;
+            max-width: 1000px;
+        }
+
+        /* Menghapus Dekorasi Background */
+        .visi-card::before {
+            display: none;
+        }
+
+        .visi-label {
+            /* VISI SEKOLAH BESAR */
+            background: transparent;
+            color: #000000;
+            /* Menghapus padding/border bawah kecil jika ingin terlihat sangat polos, 
+               atau membiarkannya sebagai pemanis minimalis. Saya perbesar ukurannya. */
+            padding: 10px 0; 
+            font-weight: 900; 
+            font-size: 3rem; /* Ukuran Sangat Besar */
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-transform: uppercase;
+            border-bottom: 4px solid #000; /* Garis bawah tebal agar gagah */
+        }
+
+        .visi-text {
+            font-size: 2rem; 
+            font-weight: 800; 
+            line-height: 1.4;
+            /* WARNA DONGKER (Navy Blue) */
+            color: #000080; 
+            font-family: 'Arial', sans-serif;
+        }
+
+        .highlight {
+            /* Highlight mengikuti warna dongker, mungkin sedikit lebih terang atau tetap sama */
+            color: #000080;
+            text-decoration: underline;
+        }
+
+        /* === MISI SECTION (GRID) === */
+        .misi-section {
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            color: #333;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-header::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background: #FFA000;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .misi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .misi-card {
+            background: white;
+            padding: 30px 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+            opacity: 0; /* For animation setup */
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* Staggered Animation Delays */
+        .misi-card:nth-child(1) { animation-delay: 0.1s; border-left-color: #e53935; }
+        .misi-card:nth-child(2) { animation-delay: 0.2s; border-left-color: #8e24aa; }
+        .misi-card:nth-child(3) { animation-delay: 0.3s; border-left-color: #1e88e5; }
+        .misi-card:nth-child(4) { animation-delay: 0.4s; border-left-color: #43a047; }
+        .misi-card:nth-child(5) { animation-delay: 0.5s; border-left-color: #fb8c00; }
+        .misi-card:nth-child(6) { animation-delay: 0.6s; border-left-color: #00acc1; }
+
+        .misi-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .misi-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #eceff1;
+            position: absolute;
+            right: 10px;
+            top: 0px;
+            line-height: 1;
+            transition: 0.3s;
+        }
+        
+        .misi-card:hover .misi-number {
+            color: #cfd8dc;
+            transform: scale(1.2);
+        }
+
+        .misi-icon {
+            min-width: 50px;
+            height: 50px;
+            background: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .misi-text {
+            font-size: 1rem;
+            color: #546e7a;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsive Font Size */
+        @media (max-width: 768px) {
+            .visi-label { font-size: 2rem; }
+            .visi-text { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Header DIHAPUS sesuai permintaan -->
+
+        <!-- Visi Section -->
+        <div class="visi-wrapper">
+            <div class="visi-card">
+                <span class="visi-label">VISI SEKOLAH</span>
+                <p class="visi-text">
+                    "Menghasilkan Peserta didik yang <span class="highlight">berakhlak mulia</span>, kreatif, bernalar kritis, <span class="highlight">mandiri</span>, dan berwawasan global."
+                </p>
+            </div>
+        </div>
+
+        <!-- Misi Section -->
+        <div class="misi-section">
+            <h2 class="section-header">Misi Sekolah</h2>
+            
+            <div class="misi-grid">
+                <!-- Misi 1 -->
+                <div class="misi-card">
+                    <div class="misi-number">01</div>
+                    <div class="misi-icon">🙏</div>
+                    <p class="misi-text">Menyelenggarakan pendidikan budi pekerti dan keagamaan.</p>
+                </div>
+
+                <!-- Misi 2 -->
+                <div class="misi-card">
+                    <div class="misi-number">02</div>
+                    <div class="misi-icon">🤝</div>
+                    <p class="misi-text">Melaksanakan pembelajaran <i>link and match</i> dengan kebutuhan industri.</p>
+                </div>
+
+                <!-- Misi 3 -->
+                <div class="misi-card">
+                    <div class="misi-number">03</div>
+                    <div class="misi-icon">🚀</div>
+                    <p class="misi-text">Melaksanakan pembelajaran yang berbasis projek (Project Based Learning).</p>
+                </div>
+
+                <!-- Misi 4 -->
+                <div class="misi-card">
+                    <div class="misi-number">04</div>
+                    <div class="misi-icon">🌱</div>
+                    <p class="misi-text">Mewujudkan lingkungan sekolah sehat, bersih, hijau, dan menyenangkan.</p>
+                </div>
+
+                <!-- Misi 5 -->
+                <div class="misi-card">
+                    <div class="misi-number">05</div>
+                    <div class="misi-icon">⚙️</div>
+                    <p class="misi-text">Menyelenggarakan pembelajaran <i>Teaching Factory</i> (TEFA) bersama industri.</p>
+                </div>
+
+                <!-- Misi 6 -->
+                <div class="misi-card">
+                    <div class="misi-number">06</div>
+                    <div class="misi-icon">💻</div>
+                    <p class="misi-text">Melaksanakan pembelajaran berbasis teknologi informasi dan penguatan profil pelajar Pancasila.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
