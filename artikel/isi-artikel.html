@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Artikel Modern & Detail View</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'], // Untuk teks artikel agar nyaman dibaca
+                    },
+                    colors: {
+                        primary: '#2563EB', 
+                        secondary: '#1E293B',
+                        accent: '#F8FAFC',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            /* Smooth scrolling for anchors */
+            scroll-behavior: smooth;
+        }
+        
+        .card-image-container {
+            mask-image: radial-gradient(white, black);
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+        }
+        
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Article Content Typography styling */
+        .article-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: #334155;
+            font-family: 'Merriweather', serif;
+            font-size: 1.125rem;
+        }
+        .article-content h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #2563EB;
+            padding-left: 1.5rem;
+            font-style: italic;
+            color: #475569;
+            margin: 2rem 0;
+            background: #F8FAFC;
+            padding: 1.5rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen text-slate-800">
+
+    <!-- Navigation (Simple) -->
+    <nav class="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="showList()">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">A</div>
+                    <span class="font-bold text-xl tracking-tight text-secondary">Artikulo.</span>
+                </div>
+                <button class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                    <i class="ph ph-list text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- VIEW 1: ARTICLE LIST -->
+    <main id="list-view" class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto transition-opacity duration-300">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-16 animate-slide-up">
+            <span class="text-primary font-semibold tracking-wider uppercase text-sm">Blog & Wawasan</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-secondary mt-2 mb-4">Jelajahi Pemikiran Baru</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto text-lg">Kumpulan artikel terkurasi mengenai desain, teknologi, dan gaya hidup produktif.</p>
+        </div>
+
+        <!-- Article Grid -->
+        <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            <!-- Articles will be injected here by JS -->
+        </div>
+    </main>
+
+    <!-- VIEW 2: ARTICLE DETAIL (Initially Hidden) -->
+    <main id="detail-view" class="hidden pt-20 bg-white min-h-screen animate-fade-in">
+        <!-- Progress Bar -->
+        <div class="fixed top-16 left-0 h-1 bg-primary z-40 transition-all duration-300" style="width: 0%" id="read-progress"></div>
+
+        <!-- Back Button Floating -->
+        <button onclick="showList()" class="fixed bottom-8 right-8 md:top-24 md:left-8 md:right-auto md:bottom-auto z-50 bg-white text-secondary shadow-xl hover:shadow-2xl p-4 rounded-full border border-gray-100 flex items-center justify-center transition-all hover:scale-105 group">
+            <i class="ph ph-arrow-left text-xl group-hover:-translate-x-1 transition-transform"></i>
+            <span class="hidden md:inline ml-2 font-semibold">Kembali</span>
+        </button>
+
+        <!-- Content Container -->
+        <article class="max-w-4xl mx-auto relative">
+            
+            <!-- Hero Image -->
+            <div class="h-[40vh] md:h-[60vh] w-full relative overflow-hidden md:rounded-b-3xl">
+                <img id="detail-image" src="" alt="" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                
+                <!-- Title Overlay -->
+                <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 text-white">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span id="detail-category" class="bg-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Category</span>
+                        <span id="detail-date" class="text-gray-300 text-sm flex items-center gap-1"><i class="ph ph-calendar"></i> Date</span>
+                    </div>
+                    <h1 id="detail-title" class="text-3xl md:text-5xl font-bold leading-tight mb-4 shadow-black drop-shadow-lg">Article Title</h1>
+                    
+                    <div class="flex items-center gap-4 mt-6">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 bg-gray-200 rounded-full overflow-hidden border-2 border-white">
+                                <img src="https://ui-avatars.com/api/?name=Admin+User&background=random" alt="Author">
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold">Ditulis oleh Admin</span>
+                                <span class="text-xs text-gray-400">Editor Senior</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article Body -->
+            <div class="px-4 md:px-12 py-12 bg-white relative -mt-6 rounded-t-3xl md:mt-0 md:rounded-none">
+                <div class="max-w-2xl mx-auto">
+                    <!-- Intro / Summary -->
+                    <p id="detail-summary" class="text-xl md:text-2xl text-gray-600 font-sans font-light leading-relaxed mb-10 border-b pb-8"></p>
+                    
+                    <!-- Main Content -->
+                    <div id="detail-content" class="article-content">
+                        <!-- Content injected via JS -->
+                    </div>
+
+                    <!-- Share Section -->
+                    <div class="mt-16 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <span class="font-bold text-secondary">Bagikan artikel ini:</span>
+                        <div class="flex gap-4">
+                            <button class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"><i class="ph ph-facebook-logo text-xl"></i></button>
+                            <button class="w-10 h-10 rounded-full bg-sky-50 text-sky-500 flex items-center justify-center hover:bg-sky-500 hover:text-white transition-colors"><i class="ph ph-twitter-logo text-xl"></i></button>
+                            <button class="w-10 h-10 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-colors"><i class="ph ph-instagram-logo text-xl"></i></button>
+                            <button class="w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-800 hover:text-white transition-colors"><i class="ph ph-link text-xl"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        // Data Artikel (Simulasi Database)
+        const articlesData = [
+            {
+                id: 1,
+                title: "Masa Depan Web Design: Menggabungkan Estetika dan AI",
+                date: "22 Nov 2025",
+                readTime: "5 min baca",
+                category: "Teknologi",
+                color: "bg-primary", // Blue
+                textColor: "text-primary",
+                image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                summary: "Jelajahi bagaimana kecerdasan buatan mengubah cara kita mendesain antarmuka pengguna. Dari layout generatif hingga palet warna otomatis.",
+                content: `
+                    <p>Kecerdasan Buatan (AI) bukan lagi sekadar kata kunci futuristik; ia telah menjadi alat penting dalam kotak peralatan setiap desainer web modern. Dalam beberapa tahun terakhir, kita telah melihat pergeseran paradigma dari mendesain 'untuk' layar menjadi mendesain 'dengan' algoritma.</p>
+                    
+                    <h3>Generative UI: Lebih dari Sekadar Template</h3>
+                    <p>Bayangkan sebuah website yang tidak statis, melainkan beradaptasi secara real-time dengan preferensi estetika pengguna. Generative UI memungkinkan hal ini. AI dapat menganalisis perilaku pengguna dan secara dinamis menyesuaikan layout, tipografi, dan bahkan skema warna untuk meningkatkan keterlibatan.</p>
+                    
+                    <blockquote>"Desain bukan hanya tentang apa yang terlihat dan terasa. Desain adalah tentang bagaimana itu bekerja." - Steve Jobs (Diadaptasi untuk era AI)</blockquote>
+
+                    <h3>Kolaborasi Manusia dan Mesin</h3>
+                    <p>Banyak yang khawatir AI akan menggantikan desainer. Namun, kenyataannya justru sebaliknya. AI mengambil alih tugas-tugas repetitif seperti resizing gambar, pembuatan variasi warna, dan debugging kode dasar, membebaskan desainer untuk fokus pada aspek yang paling penting: <strong>Kreativitas dan Empati</strong>.</p>
+                    
+                    <p>Di masa depan, desainer web akan bertindak lebih sebagai 'kurator' dan 'sutradara', mengarahkan AI untuk mengeksekusi visi artistik yang kompleks dalam waktu singkat.</p>
+                `
+            },
+            {
+                id: 2,
+                title: "Filosofi Minimalisme dalam Ruang Kerja Digital",
+                date: "20 Nov 2025",
+                readTime: "3 min baca",
+                category: "Gaya Hidup",
+                color: "bg-emerald-500", // Green
+                textColor: "text-emerald-600",
+                image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                summary: "Mengapa less is more? Temukan strategi untuk membersihkan kekacauan digital di desktop Anda dan meningkatkan fokus secara drastis.",
+                content: `
+                    <p>Di dunia yang penuh dengan notifikasi tanpa henti dan tab browser yang tak terhitung jumlahnya, kemampuan untuk fokus adalah mata uang baru. Minimalisme digital bukan tentang tidak menggunakan teknologi, melainkan menggunakannya dengan <em>intensi</em>.</p>
+
+                    <h3>Seni Mengurangi untuk Menambah</h3>
+                    <p>Konsep dasar minimalisme adalah menghapus segala sesuatu yang tidak menambah nilai, sehingga kita bisa memberi ruang lebih untuk hal-hal yang benar-benar penting. Dalam konteks ruang kerja digital, ini bisa berarti:</p>
+                    
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700 mb-6 font-serif">
+                        <li>Membersihkan desktop komputer dari file-file "sementara" yang sudah menjadi permanen.</li>
+                        <li>Menggunakan aplikasi "Focus Mode" untuk memblokir gangguan.</li>
+                        <li>Menerapkan aturan "Inbox Zero" di email.</li>
+                    </ul>
+
+                    <blockquote>Kekacauan visual menciptakan kekacauan mental. Desktop yang bersih adalah pikiran yang jernih.</blockquote>
+
+                    <h3>Membangun Sistem yang Berkelanjutan</h3>
+                    <p>Minimalisme bukanlah proyek satu kali, melainkan gaya hidup. Mulailah dengan langkah kecil. Luangkan 10 menit setiap akhir hari kerja untuk menutup semua tab, menyimpan file di folder yang tepat, dan merencanakan prioritas untuk esok hari.</p>
+                `
+            }
+        ];
+
+        const listView = document.getElementById('list-view');
+        const detailView = document.getElementById('detail-view');
+        const articlesContainer = document.getElementById('articles-container');
+
+        // Function to Render List
+        function renderArticles() {
+            articlesContainer.innerHTML = articlesData.map(article => `
+                <article class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 flex flex-col h-full overflow-hidden relative animate-slide-up">
+                    <div class="relative h-64 overflow-hidden card-image-container cursor-pointer" onclick="openDetail(${article.id})">
+                        <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-secondary font-bold text-lg px-3 py-1 rounded-lg shadow-lg border border-white/50 z-10">#0${article.id}</div>
+                        <div class="absolute bottom-4 left-4 ${article.color} text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">${article.category}</div>
+                    </div>
+
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex items-center text-gray-400 text-sm mb-3 gap-2">
+                            <i class="ph ph-calendar-blank text-lg ${article.textColor}"></i>
+                            <span>${article.date}</span>
+                            <span class="mx-2">•</span>
+                            <span class="flex items-center gap-1"><i class="ph ph-clock"></i> ${article.readTime}</span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-secondary mb-3 leading-tight group-hover:${article.textColor} transition-colors duration-300 cursor-pointer" onclick="openDetail(${article.id})">
+                            ${article.title}
+                        </h3>
+
+                        <p class="text-gray-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+                            ${article.summary}
+                        </p>
+
+                        <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <button onclick="openDetail(${article.id})" class="inline-flex items-center gap-2 ${article.textColor} font-semibold group/btn transition-all hover:gap-3">
+                                Baca Selengkapnya
+                                <i class="ph ph-arrow-right font-bold transition-transform duration-300 group-hover/btn:translate-x-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Function to Open Detail View
+        function openDetail(id) {
+            const article = articlesData.find(a => a.id === id);
+            if (!article) return;
+
+            // Populate Data
+            document.getElementById('detail-image').src = article.image;
+            document.getElementById('detail-category').innerText = article.category;
+            document.getElementById('detail-category').className = `${article.color} px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider`;
+            document.getElementById('detail-date').innerHTML = `<i class="ph ph-calendar"></i> ${article.date} • ${article.readTime}`;
+            document.getElementById('detail-title').innerText = article.title;
+            document.getElementById('detail-summary').innerText = article.summary;
+            document.getElementById('detail-content').innerHTML = article.content;
+
+            // Transition
+            listView.classList.add('hidden');
+            detailView.classList.remove('hidden');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Function to Go Back to List
+        function showList() {
+            detailView.classList.add('hidden');
+            listView.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize
+        renderArticles();
+
+        // Scroll Progress Bar Logic
+        window.onscroll = function() {
+            if (!detailView.classList.contains('hidden')) {
+                let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                let scrolled = (winScroll / height) * 100;
+                document.getElementById("read-progress").style.width = scrolled + "%";
+            }
+        };
+
+    </script>
+</body>
+</html>
