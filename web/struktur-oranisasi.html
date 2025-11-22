@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struktur Organisasi SMK Negeri 1 Gunung Tuleh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* CSS Khusus untuk Membuat Pohon Struktur (Tree Diagram) */
+        .tree {
+            width: 100%;
+            /* padding-top removed to manually connect to KS */
+            position: relative;
+            transition: all 0.5s; 
+            display: flex;
+            justify-content: center;
+        }
+
+        .tree ul {
+            padding-top: 20px;
+            position: relative;
+            transition: all 0.5s;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tree li {
+            float: left;
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 20px 5px 0 5px;
+            transition: all 0.5s;
+        }
+
+        /* Garis Penghubung (Connectors) */
+        .tree li::before, .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 2px solid #9ca3af;
+            width: 50%;
+            height: 20px;
+        }
+
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 2px solid #9ca3af;
+        }
+
+        /* Remove connectors for single root if needed, but here we handle connections manually for the top node */
+        .tree li:only-child::after, .tree li:only-child::before {
+            display: none;
+        }
+
+        .tree li:only-child {
+            padding-top: 0;
+        }
+
+        .tree li:first-child::before, .tree li:last-child::after {
+            border: 0 none;
+        }
+
+        .tree li:last-child::before {
+            border-right: 2px solid #9ca3af;
+            border-radius: 0 5px 0 0;
+        }
+
+        .tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+        }
+
+        .tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 2px solid #9ca3af;
+            width: 0;
+            height: 20px;
+        }
+
+        /* Card Styles */
+        .org-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #1f2937;
+            display: inline-block;
+            border-radius: 8px;
+            transition: all 0.3s;
+            position: relative;
+            min-width: 160px;
+            max-width: 220px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .org-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+
+        /* Specific Level Colors */
+        .level-head .role { background-color: #1e3a8a; color: white; }
+        .level-waka .role { background-color: #059669; color: white; }
+        .level-ka .role { background-color: #d97706; color: white; }
+        .level-walas .role { background-color: #4f46e5; color: white; }
+        .level-staff .role { background-color: #0891b2; color: white; }
+        .level-siswa .role { background-color: #6b7280; color: white; }
+
+        .role {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        
+        .title {
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+
+        .walas-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            min-width: 300px;
+        }
+        @media (min-width: 1024px) {
+            .walas-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+    <!-- Main Diagram Container -->
+    <main class="flex-grow overflow-auto cursor-grab active:cursor-grabbing p-10">
+        <div class="min-w-max mx-auto flex flex-col items-center">
+            
+            <!-- Section Top: Komite - Kepala Sekolah - Pengawas (Sejajar) -->
+            <div class="flex items-center gap-2 md:gap-4 mb-0 relative z-20">
+                
+                <!-- Komite (Kiri) -->
+                <div class="flex items-center">
+                    <div class="org-card level-head">
+                        <span class="role bg-slate-600">Komite</span>
+                        <div class="name">Ani Misbah, S.Pd</div>
+                    </div>
+                    <!-- Garis Putus-putus ke KS -->
+                    <div class="w-8 md:w-16 border-t-2 border-dashed border-gray-400 h-0"></div>
+                </div>
+
+                <!-- Kepala Sekolah (Tengah) -->
+                <div class="flex flex-col items-center relative">
+                    <div class="org-card level-head scale-110 border-blue-600 border-2 shadow-xl z-10">
+                        <span class="role">Kepala Sekolah</span>
+                        <div class="name text-base">WETNAWATI, M.Pd</div>
+                        <div class="title">NIP. 19760401 200501 2 009</div>
+                    </div>
+                    <!-- Garis Vertikal ke Bawah (Manual Connector) -->
+                    <div class="h-12 w-0.5 bg-gray-400 absolute -bottom-12 z-0"></div>
+                </div>
+
+                <!-- Pengawas Pembina (Kanan) -->
+                <div class="flex items-center">
+                    <!-- Garis Putus-putus dari KS -->
+                    <div class="w-8 md:w-16 border-t-2 border-dashed border-gray-400 h-0"></div>
+                    <div class="org-card level-head">
+                        <span class="role bg-red-600">Pengawas Pembina</span>
+                        <div class="name">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tree Structure Starts Below KS -->
+            <!-- Margin top disesuaikan agar garis vertikal dari KS nyambung ke Ka TU -->
+            <div class="tree mt-12">
+                <ul>
+                    <li>
+                        <div class="org-card level-staff">
+                            <span class="role">Ka. Tata Usaha</span>
+                            <div class="name">JONAL RIFA, S.Kom</div>
+                        </div>
+
+                        <!-- Level 3: WAKA -->
+                        <ul>
+                            <!-- Waka Kurikulum -->
+                            <li>
+                                <div class="org-card level-waka">
+                                    <span class="role">Wakakur</span>
+                                    <div class="name">HERMAN, S.Pd</div>
+                                </div>
+                                
+                                <!-- Turunan Wakakur: Perpus & Lab -->
+                                <ul>
+                                    <li>
+                                        <div class="org-card level-ka">
+                                            <span class="role">Ka. Perpustakaan</span>
+                                            <div class="name">ERNI, S.Pd</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="org-card level-ka">
+                                            <span class="role">Ka. Laboratorium</span>
+                                            <div class="name">PRILLI IFELICIA, S.Pd</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Waka Kesiswaan -->
+                            <li>
+                                <div class="org-card level-waka">
+                                    <span class="role">Waka Kesiswaan</span>
+                                    <div class="name">SURYA SAKTI, S.Pd</div>
+                                </div>
+
+                                <!-- Turunan Kesiswaan: Pembina OSIS -->
+                                <ul>
+                                    <li>
+                                        <div class="org-card level-staff">
+                                            <span class="role">Pembina OSIS</span>
+                                            <div class="name mb-1">Septia Rini, S.Pd</div>
+                                            <div class="name">Habli Hanafi, S.Pd</div>
+                                        </div>
+
+                                        <!-- Siswa -->
+                                            <ul>
+                                            <li>
+                                                <div class="org-card level-siswa">
+                                                    <span class="role">Peserta Didik</span>
+                                                </div>
+                                            </li>
+                                            </ul>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Waka Sarpras -->
+                            <li>
+                                <div class="org-card level-waka">
+                                    <span class="role">Waka Sarpras</span>
+                                    <div class="name">ASNAH, S.Pt</div>
+                                </div>
+                            </li>
+
+                            <!-- Waka Humas -->
+                            <li>
+                                <div class="org-card level-waka">
+                                    <span class="role">Waka Humas</span>
+                                    <div class="name">VIVI YULIA BAHRI, S.Pd</div>
+                                </div>
+                            </li>
+                        </ul> 
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Bagian Kepala Program Keahlian (Dibuat sebagai section terpisah di bawah tree utama agar rapi) -->
+            <div class="mt-8 mb-12">
+                <h3 class="text-center text-xl font-bold text-gray-700 mb-6 uppercase tracking-wider">Kepala Program Keahlian</h3>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="org-card level-ka text-center">
+                        <span class="role">Teknik Otomotif</span>
+                        <div class="name">ANNA LINDA AUFA, S.Pd</div>
+                    </div>
+                    <div class="org-card level-ka text-center">
+                        <span class="role">Teknik Pengelasan</span>
+                        <div class="name">ABDUL SALIM, S.Pd</div>
+                    </div>
+                    <div class="org-card level-ka text-center">
+                        <span class="role">Agribisnis Ternak</span>
+                        <div class="name">NURAFNI SOFIA, S.Pd</div>
+                    </div>
+                    <div class="org-card level-ka text-center">
+                        <span class="role">Pemasaran</span>
+                        <div class="name">DESI NOVITA SARI, S.Pd</div>
+                    </div>
+                    <div class="org-card level-ka text-center">
+                        <span class="role">Manajemen Perkantoran</span>
+                        <div class="name">DESMA WARNI, S.Pd</div>
+                    </div>
+                    <div class="org-card level-ka text-center">
+                        <span class="role">Akuntansi & Keuangan</span>
+                        <div class="name">EZI, S.Pd</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bagian Wali Kelas (Grid Layout) -->
+            <div class="border-t-2 border-gray-200 pt-8 w-full">
+                <h3 class="text-center text-xl font-bold text-gray-700 mb-8 uppercase tracking-wider">Wali Kelas</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
+                    
+                    <!-- KELAS X -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
+                        <div class="text-center mb-4 bg-blue-600 text-white py-2 rounded font-bold">KELAS X</div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">X TO</span>
+                                <span class="text-sm font-medium">Neni Herti, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">X TPFL</span>
+                                <span class="text-sm font-medium">Ihsanul Hadi, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">X AT</span>
+                                <span class="text-sm font-medium">Etika Fitri, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">X PEM</span>
+                                <span class="text-sm font-medium">Riana Pertiwi, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">X MPLB</span>
+                                <span class="text-sm font-medium">Hilda Elfina, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">X AKL</span>
+                                <span class="text-sm font-medium">Weni Susanti, S.Pd</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KELAS XI -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-teal-100">
+                        <div class="text-center mb-4 bg-teal-600 text-white py-2 rounded font-bold">KELAS XI</div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XI TSM</span>
+                                <span class="text-sm font-medium">Habli Hanafi, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XI TP</span>
+                                <span class="text-sm font-medium">Peri Irawan, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XI ATU</span>
+                                <span class="text-sm font-medium">Ennyzal U., S.Pt</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XI BD</span>
+                                <span class="text-sm font-medium">Yuneliza, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XI MP</span>
+                                <span class="text-sm font-medium">Yelpita, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XI AK</span>
+                                <span class="text-sm font-medium">Wanda Oktari, S.Pd</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KELAS XII -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-indigo-100">
+                        <div class="text-center mb-4 bg-indigo-600 text-white py-2 rounded font-bold">KELAS XII</div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XII SM</span>
+                                <span class="text-sm font-medium">Taufik R., S.Pd.Gr</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XII LAS</span>
+                                <span class="text-sm font-medium">Nurhidani H., S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XII ATU</span>
+                                <span class="text-sm font-medium">Asnah, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XII BD</span>
+                                <span class="text-sm font-medium">Toto Setiadi, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XII MP</span>
+                                <span class="text-sm font-medium">Elsa Mitra, S.Pd</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <span class="font-bold text-sm text-gray-600">XII AK</span>
+                                <span class="text-sm font-medium">Riya Andriyani, S.Pd</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>
