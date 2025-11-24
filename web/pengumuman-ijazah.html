@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemberitahuan Pengambilan Ijazah - SMKN 1 Gunung Tuleh</title>
+    
+    <!-- Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js --><script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts: Poppins for modern look --><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .paper-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%); /* Tailwind green-600 to green-700 */
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navbar --><nav class="bg-green-800 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-school text-2xl"></i>
+                <div>
+                    <h1 class="font-bold text-xl leading-tight">SMK NEGERI 1 GUNUNG TULEH</h1>
+                    <p class="text-sm text-green-200">Sistem Informasi Pengambilan Ijazah</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 space-y-8">
+
+        <!-- BAGIAN 1: PENGUMUMAN (Desain Canva Style) --><section class="gradient-bg text-white p-6 md:p-10 rounded-xl paper-shadow max-w-4xl mx-auto relative overflow-hidden">
+            <!-- Decorative Elements --><div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                <i class="fa-solid fa-graduation-cap text-[12rem] absolute -top-10 -left-10 rotate-12"></i>
+                <i class="fa-solid fa-book-open text-[10rem] absolute -bottom-10 -right-10 -rotate-12"></i>
+            </div>
+
+            <div class="relative z-10 text-center">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <i class="fa-solid fa-scroll text-4xl text-yellow-300"></i>
+                    <h2 class="text-3xl md:text-4xl font-bold uppercase tracking-wide drop-shadow-lg">PEMBERITAHUAN PENTING</h2>
+                </div>
+                <p class="text-lg mb-6 font-semibold opacity-90">Pengambilan Ijazah Alumni SMKN 1 Gunung Tuleh</p>
+
+                <div class="bg-white text-gray-800 p-6 rounded-lg shadow-inner text-left md:text-center space-y-4">
+                    <p class="text-base leading-relaxed">
+                        Diberitahukan kepada seluruh alumni dan orang tua/wali SMKN 1 Gunung Tuleh, sehubungan dengan peraturan Menteri Pendidikan dan Kebudayaan Nomor 12 Tahun 2017 tentang IJAZAH:
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="bg-blue-50 p-4 rounded-lg flex items-center shadow-sm">
+                            <i class="fa-solid fa-hand-holding-dollar text-blue-600 text-2xl mr-3"></i>
+                            <div>
+                                <strong class="text-blue-700">GRATIS!</strong>
+                                <p class="text-gray-600">Pengambilan ijazah TIDAK DIKENAKAN BIAYA APAPUN.</p>
+                            </div>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg flex items-center shadow-sm">
+                            <i class="fa-solid fa-triangle-exclamation text-red-600 text-2xl mr-3"></i>
+                            <div>
+                                <strong class="text-red-700">RISIKO!</strong>
+                                <p class="text-gray-600">Kerusakan/kehilangan ijazah menjadi tanggung jawab alumni jika tidak segera diambil.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-base mt-4 leading-relaxed">
+                        Mohon segera datang ke sekolah untuk mengambil ijazah Anda demi kelancaran administrasi dan menghindari hal yang tidak diinginkan.
+                    </p>
+
+                    <p class="text-sm text-gray-600 mt-6">
+                        <strong class="text-gray-700">Lokasi:</strong> SMKN 1 Gunung Tuleh | 
+                        <strong class="text-gray-700">Waktu:</strong> Jam Kerja Sekolah
+                    </p>
+                </div>
+
+                <div class="mt-8 text-sm opacity-90">
+                    <p>Terima kasih atas perhatian dan kerja sama Bapak/Ibu sekalian.</p>
+                    <p class="mt-4 font-semibold text-yellow-200">Simpang Tigo Alin, 17 Maret 2025</p>
+                    <p class="font-bold text-xl mt-2">Kepala Sekolah SMKN 1 Gunung Tuleh</p>
+                </div>
+
+                <!-- Tombol CTA Baru -->
+                <div class="mt-10 mb-2">
+                    <a href="https://smkn1gunungtuleh.sch.id/pengambilan-ijazah.html" 
+                       class="inline-flex items-center gap-2 bg-yellow-400 text-green-900 hover:bg-yellow-300 hover:text-green-950 font-bold py-3 px-8 rounded-full shadow-xl transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 border-b-4 border-yellow-600 active:border-b-0 active:translate-y-0">
+                        <i class="fa-solid fa-clipboard-list text-xl"></i>
+                        <span>LIHAT DAFTAR SISWA</span>
+                    </a>
+                    <p class="text-xs text-green-100 mt-2 opacity-80">Klik tombol di atas untuk melihat data lengkap di website utama sekolah</p>
+                </div>
+            </div>
+        </section>
+
+    <script>
+        // DATA SISWA (LENGKAPKAN SAMPAI 57 SISWA)
+        const rawData = [
+            { no: 1, nama: "ADEL JUITA", nis: "2022883" },
+            { no: 2, nama: "ADITIA WARMAN", nis: "2022920" },
+            { no: 3, nama: "ADRIAN", nis: "2022941" },
+            { no: 4, nama: "AHMAT HAIKAL", nis: "2020713" },
+            { no: 5, nama: "AISYAH", nis: "2022958" },
+            { no: 6, nama: "ALFISYAH NURAINUN HASIBUAN", nis: "2022885" },
+            { no: 7, nama: "ANBATULLOH HULIBNI", nis: "2022944" },
+            { no: 8, nama: "ANGGIAN SAPUTRA", nis: "2020717" },
+            { no: 9, nama: "ANIVA YUHANDA", nis: "2021843" },
+            { no: 10, nama: "ANNISA", nis: "2022886" },
+            { no: 11, nama: "ANWAR ROSADI DLY", nis: "2022921" },
+            { no: 12, nama: "ARTIKA PUTRI", nis: "2020656" },
+            { no: 13, nama: "AVID EFENDI", nis: "2021845" },
+            { no: 14, nama: "AZIS SAYRAZI", nis: "2020740" },
+            { no: 15, nama: "BAYU PANGESTU", nis: "20221015" },
+            { no: 16, nama: "DANDI", nis: "20221016" },
+            { no: 17, nama: "DEPIYA", nis: "2021772" },
+            { no: 18, nama: "DESRIFA ZALNA", nis: "2022890" },
+            { no: 19, nama: "DOLA AMELIASTI", nis: "2021808" },
+            { no: 20, nama: "EFRIANI", nis: "2020661" },
+            { no: 21, nama: "ERIFZAN", nis: "2021868" },
+            { no: 22, nama: "FAREL", nis: "20221018" },
+            { no: 23, nama: "GITA PERTIWI", nis: "2021870" },
+            { no: 24, nama: "HENDRA GUNAWAN", nis: "2020750" },
+            { no: 25, nama: "INDRA GANI", nis: "20221020" },
+            { no: 26, nama: "IRWAN", nis: "2021872" },
+            { no: 27, nama: "ISMI DELVIA", nis: "2022891" },
+            { no: 28, nama: "JUNAIDI", nis: "2020754" },
+            { no: 29, nama: "LISNA", nis: "2021875" },
+            { no: 30, nama: "M. AKBAR", nis: "2022922" },
+            { no: 31, nama: "M. IQBAL RAMADHAN", nis: "2020757" },
+            { no: 32, nama: "M. RIVALDI", nis: "2022923" },
+            { no: 33, nama: "MAI HANIFAH", nis: "2021876" },
+            { no: 34, nama: "MAIWARNI", nis: "2020670" },
+            { no: 35, nama: "MELISA", nis: "2022895" },
+            { no: 36, nama: "MIFTA HULJANAH", nis: "2021878" },
+            { no: 37, nama: "MUHAMMAD HABIB", nis: "2022924" },
+            { no: 38, nama: "MUHAMMAD IKHLAS", nis: "2020760" },
+            { no: 39, nama: "MUHAMMAD JAFAR", nis: "2021880" },
+            { no: 40, nama: "MUTIA SARI", nis: "2022897" },
+            { no: 41, nama: "NABILA", nis: "2021882" },
+            { no: 42, nama: "NAJWA", nis: "2022898" },
+            { no: 43, nama: "NURHIDAYATUL JANNAH", nis: "2020674" },
+            { no: 44, nama: "PUTRA RAMADHAN", nis: "2022927" },
+            { no: 45, nama: "PUTRI AYU", nis: "2021885" },
+            { no: 46, nama: "RAMADHANU", nis: "2022928" },
+            { no: 47, nama: "RANI", nis: "2020677" },
+            { no: 48, nama: "RIDHO ARDIAN", nis: "2021887" },
+            { no: 49, nama: "RISKA ANDRIANI", nis: "2022900" },
+            { no: 50, nama: "RITA", nis: "2021888" },
+            { no: 51, nama: "ROSMIATI", nis: "2020680" },
+            { no: 52, nama: "SAFIRA PUTRI", nis: "2022902" },
+            { no: 53, nama: "SALMAH NURDIANA", nis: "2021890" },
+            { no: 54, nama: "SILVANA", nis: "2022903" },
+            { no: 55, nama: "SITI AISYAH", nis: "2020683" },
+            { no: 56, nama: "SRI DEWI", nis: "2021892" },
+            { no: 57, nama: "YESSI FITRIANI", nis: "2022905" }
+        ];
+
+        // 1. POPULATE TABLE
+        const tableBody = document.getElementById('studentTableBody');
+        const rowCountEl = document.getElementById('rowCount');
+        const totalCountEl = document.getElementById('totalCount');
+
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            if (data.length === 0) {
+                document.getElementById('noDataMessage').classList.remove('hidden');
+            } else {
+                document.getElementById('noDataMessage').classList.add('hidden');
+                data.forEach((student, index) => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-green-50 transition duration-150";
+                    tr.innerHTML = `
+                        <td class="p-4 border-b text-center font-mono text-gray-500">${index + 1}</td>
+                        <td class="p-4 border-b font-mono font-bold text-gray-700">${student.nis}</td>
+                        <td class="p-4 border-b font-semibold text-gray-800">${student.nama}</td>
+                        <td class="p-4 border-b text-center">
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold border border-red-200">
+                                BELUM DIAMBIL
+                            </span>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            }
+            rowCountEl.innerText = `${data.length} Baris`;
+            totalCountEl.innerText = data.length;
+        }
+
+        renderTable(rawData);
+
+        // 2. PREPARE CHART DATA
+        // Logic: Extract first 4 digits of NIS to determine 'Year/Angkatan'
+        const yearCounts = {};
+        
+        rawData.forEach(student => {
+            // Take first 4 chars of NIS. Example 2022920 -> 2022
+            let year = String(student.nis).substring(0, 4);
+            if (yearCounts[year]) {
+                yearCounts[year]++;
+            } else {
+                yearCounts[year] = 1;
+            }
+        });
+
+        const chartLabels = Object.keys(yearCounts).sort();
+        const chartData = chartLabels.map(year => yearCounts[year]);
+
+        // 3. RENDER CHART
+        const ctx = document.getElementById('studentChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: 'Jumlah Siswa Belum Mengambil Ijazah',
+                    data: chartData,
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.7)', // Blue
+                        'rgba(16, 185, 129, 0.7)', // Green
+                        'rgba(245, 158, 11, 0.7)', // Yellow
+                        'rgba(239, 68, 68, 0.7)'   // Red
+                    ],
+                    borderColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(16, 185, 129)',
+                        'rgb(245, 158, 11)',
+                        'rgb(239, 68, 68)'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return 'Tahun Masuk (NIS): ' + context[0].label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Siswa'
+                        },
+                        ticks: {
+                            stepSize: 1
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tahun (Berdasarkan 4 digit awal NIS)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // 4. SEARCH FUNCTION
+        function filterTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            
+            const filteredData = rawData.filter(student => {
+                return student.nama.toUpperCase().includes(filter) || 
+                       String(student.nis).toUpperCase().includes(filter);
+            });
+            
+            renderTable(filteredData);
+        }
+
+    </script>
+</body>
+</html>
