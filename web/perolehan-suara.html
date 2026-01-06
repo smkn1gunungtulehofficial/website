@@ -186,9 +186,10 @@
 
                             <div className="mb-6">
                                 <label className="block text-sm font-medium text-slate-700 mb-2">Jumlah Calon</label>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <button onClick={() => setNumCandidates(2)} className={`p-3 rounded-lg border-2 font-semibold transition ${numCandidates === 2 ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}>2 Calon</button>
-                                    <button onClick={() => setNumCandidates(3)} className={`p-3 rounded-lg border-2 font-semibold transition ${numCandidates === 3 ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}>3 Calon</button>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <button onClick={() => setNumCandidates(2)} className={`p-3 rounded-lg border-2 font-semibold text-sm transition ${numCandidates === 2 ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}>2 Calon</button>
+                                    <button onClick={() => setNumCandidates(3)} className={`p-3 rounded-lg border-2 font-semibold text-sm transition ${numCandidates === 3 ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}>3 Calon</button>
+                                    <button onClick={() => setNumCandidates(4)} className={`p-3 rounded-lg border-2 font-semibold text-sm transition ${numCandidates === 4 ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}>4 Calon</button>
                                 </div>
                             </div>
 
@@ -243,7 +244,7 @@
                             </div>
                         )}
 
-                        <div className={`grid gap-6 ${numCandidates === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'} mb-8`}>
+                        <div className={`grid gap-6 mb-8 ${numCandidates === 4 ? 'md:grid-cols-2 xl:grid-cols-4' : numCandidates === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
                             {candidates.map((c) => {
                                 const percentage = totalVotes === 0 ? 0 : ((c.votes / totalVotes) * 100).toFixed(1);
                                 const isWinner = step === 'finish' && winner && winner.id === c.id && !winner.isTie;
